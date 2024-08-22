@@ -1,9 +1,4 @@
 ---
-let query = "";
-if (Astro.request && Astro.request.url) {
-  const url = new URL(Astro.request.url);
-  query = url.searchParams.get("query") || "";
-}
 ---
 
 <style>
@@ -22,11 +17,12 @@ if (Astro.request && Astro.request.url) {
     flex-direction: column;
   }
 
-  .search-form {
+  .search-box-container {
     display: flex;
     align-items: center;
     width: 100%;
     max-width: 1000px;
+    transition: transform 1s ease, padding-top 1s ease;
   }
 
   .search-box {
@@ -54,6 +50,7 @@ if (Astro.request && Astro.request.url) {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
 
   .search-button:hover {
@@ -68,6 +65,21 @@ if (Astro.request && Astro.request.url) {
   .search-button img {
     width: 24px;
     height: 24px;
+    display: block;
+  }
+
+  .loading-icon {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
   @media (max-width: 600px) {
@@ -75,7 +87,7 @@ if (Astro.request && Astro.request.url) {
       padding: 20px;
     }
 
-    .search-form {
+    .search-box-container {
       flex-direction: column;
       align-items: stretch;
     }
@@ -93,16 +105,38 @@ if (Astro.request && Astro.request.url) {
 </style>
 
 <div class="search-container">
-  <form action="/" method="GET" class="search-form">
+  <div class="search-box-container" data-search-container>
     <input
       type="text"
-      name="query"
       class="search-box"
       placeholder="Search by YouTube URL"
-      value={query}
+      data-search-input
     />
-    <button type="submit" class="search-button">
+    <button data-search-button class="search-button">
       <img src="search.png" alt="Search" />
     </button>
-  </form>
+  </div>
 </div>
+
+<script>
+  const buttons = document.querySelectorAll('[data-search-button]');
+  const searchContainer = document.querySelector('[data-search-container]');
+  const searchInput = document.querySelector('[data-search-input]');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      
+      const icon = button.querySelector('img');
+      if (icon) icon.style.display = 'none';
+
+      searchInput.disabled = true;
+      searchContainer.style.paddingTop = '10px';
+      searchContainer.style.transform = 'translateY(-calc(100vh - 10px))';
+
+      setTimeout(() => {
+        button.style.display = 'none';
+      }, 0);
+    });
+  });
+</script>
