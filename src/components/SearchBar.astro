@@ -1,0 +1,41 @@
+---
+let query = "";
+if (Astro.request && Astro.request.url) {
+  const url = new URL(Astro.request.url);
+  query = url.searchParams.get("query") || "";
+}
+---
+
+<style>
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  .search-box {
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    width: 50vw; 
+    font-size: 18px;
+    box-sizing: border-box;
+    max-width: 1000px; 
+  }
+</style>
+
+<div class="search-container">
+  <form action="/" method="GET">
+    <input
+      type="text"
+      name="query"
+      class="search-box"
+      placeholder="Search by YouTube URL"
+      value={query}
+    />
+  </form>
+</div>
