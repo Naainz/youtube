@@ -23,6 +23,8 @@
     width: 100%;
     max-width: 1000px;
     transition: transform 1s ease, padding-top 1s ease;
+    position: relative;
+    z-index: 10;
   }
 
   .search-box {
@@ -131,9 +133,12 @@
       if (icon) icon.style.display = 'none';
 
       searchInput.disabled = true;
-      searchContainer.style.paddingTop = '10px';
-      searchContainer.style.transform = 'translateY(-calc(100vh - 10px))';
-
+      searchContainer.style.position = 'fixed';
+      searchContainer.style.top = '10px';
+      searchContainer.style.left = '50%';
+      searchContainer.style.transform = 'translateX(-50%)';
+      searchContainer.style.zIndex = '1000';
+      
       setTimeout(() => {
         button.style.display = 'none';
       }, 0);
